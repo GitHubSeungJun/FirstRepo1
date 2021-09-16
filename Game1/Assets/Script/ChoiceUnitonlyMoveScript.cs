@@ -1,29 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ChoiceUnitonlyMoveScript : MonoBehaviour
 {
-	bool scv;
-	bool marine;
-    // Start is called before the first frame update
-    void Start()
+	public GameObject target;
+	public GameObject mouseClick;
+	public GameObject mouseClickClone;
+	LayerMask MapLayer;
+	[Range(0.0f, 10f)]
+	public float moveSpeed = 5f;
+	// Start is called before the first frame update
+	void Start()
     {
-		scv = GetComponent<UnitMove>().choiceScv;
-		marine = GetComponent<MarineMove>().choiceMarine;
-
+		MapLayer = LayerMask.GetMask("Ground");
 	}
 
     // Update is called once per frame
     void Update()
     {
-		if( scv == true)
+		if(Input.GetMouseButtonDown(0))
 		{
-			marine = false;
+			target = GetClickedObject();
 		}
-		if( marine ==true)
+		if (Input.GetMouseButtonDown(1))
 		{
-			scv = false;
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, MapLayer))
+			{
+				mouseClickClone = Instantiate(mouseClick, hit.point, Quaternion.identity) as GameObject;
+				StartCoroutine(ClickMove());
+				Destroy(mouseClickClone);
+				target.GetComponent<NavMeshAgent>().enabled = false;
+				target.transform.LookAt(hit.point);
+				target.GetComponent<NavMeshAgent>().enabled = true;
+				target.transform.LookAt(hit.point);
+				target.GetComponent<NavMeshAgent>().SetDestination(hit.point);
+			}
 		}
-    }
+	}
+	private GameObject GetClickedObject()
+	{
+		RaycastHit hit;
+		GameObject target = null;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if(true == Physics.Raycast(ray.origin,ray.direction *10, out hit))
+		{
+			target = hit.collider.gameObject;
+		}
+
+		return target;
+	}
+	IEnumerator ClickMove()
+	{
+		yield return new WaitForSeconds(1f);
+	}
 }
+

@@ -13,13 +13,14 @@ public class MarineMove : MonoBehaviour
 	LayerMask marinLayer;
 	LayerMask groundLayer;
 	public NavMeshAgent marinenavMeshAgent;
+	private UnitMove scvMoveCheck;
 	public bool choiceMarine = false;
 	// Start is called before the first frame update
 	void Start()
     {
 		marinLayer = LayerMask.GetMask("Marine");
 		groundLayer = LayerMask.GetMask("Ground");
-    }
+	}
 
 	// Update is called once per frame
 	void Update()
@@ -32,7 +33,8 @@ public class MarineMove : MonoBehaviour
 			{
 				marineObj = hit.transform.gameObject;
 				Debug.Log(hit.transform.gameObject);
-				choiceMarine = true;			
+				choiceMarine = true;
+				scvMoveCheck.choiceScv = false;
 			}
 		}
 		if (choiceMarine == true)

@@ -17,6 +17,7 @@ public class UnitMove : MonoBehaviour
 	public Vector3 firstUnitPosition;
 	public Vector3 firstMapPosition;
 	public bool choiceScv = false;
+	private MarineMove marineMoveCheck;
 	private void Start()
 	{
 		scvLayer = LayerMask.GetMask("SCV");
@@ -32,7 +33,7 @@ public class UnitMove : MonoBehaviour
 			{
 				scvObj = hit.transform.gameObject;
 				choiceScv = true;
-				
+				marineMoveCheck.choiceMarine = false;
 			}
 		}
 		if (choiceScv == true)
